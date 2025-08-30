@@ -8,60 +8,70 @@ import java.util.Queue;
 import java.util.StringTokenizer;
 
 public class Main_2178 {
-    static  int a,b;
-    static int[][] miro;
+    static int n,m;
+    static int[][] board;
     static boolean[][] visited;
-    static  int[] dx = {1,-1,0,0};
-    static  int[] dy = {0,0,-1,1};
-    static int cost=0;
     public static void main(String[] args)throws IOException {
-        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        BufferedReader br= new BufferedReader(new InputStreamReader(System.in));
         StringTokenizer st = new StringTokenizer(br.readLine());
 
-        a = Integer.parseInt(st.nextToken());
-        b = Integer.parseInt(st.nextToken());
-        miro = new int[a][b];
-        visited = new boolean[a][b];
-        for(int i=0; i<a; i++) {
-            String Line = br.readLine();
-            for(int j=0; j<b; j++) {
-                miro[i][j] = Line.charAt(j) - '0';
+        n = Integer.parseInt(st.nextToken());
+        m = Integer.parseInt(st.nextToken());
+        board = new int[n][m];
+        visited = new boolean[n][m];
+        for(int i=0; i<n; i++) {
+            String line = br.readLine();
+            for(int j=0; j<m; j++) {
+                board[i][j] =  line.charAt(j)-'0';
+
 
             }
 
         }
-        bfs();
+        int result =    bfs();
+        System.out.println(result);
+
+
     }
 
-    private static void bfs() {
-        Queue<int[]> queue = new LinkedList<>();
-        queue.add(new int[] {0,0});
+    public static  int bfs() {
+        int[] x = {1,0,-1,0};
+        int[] y = {0,-1,0,1};
+        Queue<int[]>queue = new LinkedList<>();
+
+        queue.add(new int[] {0,0,1});
         visited[0][0] = true;
-        while (!queue.isEmpty()) {
-
-
-            int[] current = queue.poll();
-            int x= current[0];
-            int y = current[1];
-
+        while(!queue.isEmpty()) {
+            int[] current  = queue.poll();
+            int nx = current[0];
+            int ny = current[1];
+            int dist = current[2];
             for(int i=0; i<4; i++) {
-                int nx = x+dx[i];
-                int ny = y + dy[i];
+                int dx=  nx +x[i];
+                int dy = ny + y[i];
 
-                if( nx>=0 && nx <a && ny>=0 && ny < b && miro[nx][ny] ==1&& !visited[nx][ny]) {
-                    miro[nx][ny] = miro[x][y] +1;
-                    queue.add(new int[] {nx,ny});
-                    visited[nx][ny] = true;
+                if(dx >= n || dx <0 || dy >=m || dy <0 || board[dx][dy] ==0) continue;
+
+                if ( dx == n -1 && dy == m -1) {
+                    return dist+1;
+                }
+
+                if ( board[dx][dy] ==1 && !visited[dx][dy]) {
+
+                        queue.add(new int[] {dx,dy,dist +1});
+                        visited[dx][dy] = true;
 
                 }
 
-
             }
 
-
         }
-        System.out.println(miro[a-1][b-1]);
+        return -1;
+
+
 
 
     }
+
+
 }
